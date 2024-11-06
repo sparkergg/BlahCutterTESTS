@@ -1,0 +1,6 @@
+assemblyai>=0.35.0
+ffmpeg>=1.4
+moviepy>=1.0.3
+pydub>=0.25.1
+streamlit>=1.39.0
+yt-dlp>=2024.11.4
