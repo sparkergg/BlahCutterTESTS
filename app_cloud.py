@@ -145,13 +145,12 @@ def video_downloader(url):
     with dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
 
-def login():
-    """Función para autenticar al usuario."""
-    if (st.session_state["input_user"] == username and
-            st.session_state["input_password"] == password):
-        st.session_state.authenticated = True
-    else:
-        st.error("Usuario o contraseña incorrectos")
+# def login():
+#     if (st.session_state["input_user"] == username and
+#             st.session_state["input_password"] == password):
+#         st.session_state.authenticated = True
+#     else:
+#         st.error("Usuario o contraseña incorrectos")
 
 
 # Interfaz de Streamlit
@@ -162,10 +161,18 @@ password=st.secrets["login"]["pass"]
 st.title("BlahCutter")
 st.write("Transcriptor de audio y video")
 if not st.session_state.authenticated:
-    st.text_input("Usuario", key="input_user")
-    st.text_input("Contraseña", type="password", key="input_password")
-    if st.button("Iniciar sesión"):
-        login()
+    with st.form("login_form"):
+        input_user = st.text_input("Usuario")
+        input_password = st.text_input("Contraseña", type="password")
+        login_button = st.form_submit_button("Iniciar sesión")
+
+    # Validar las credenciales cuando se presiona el botón en el formulario
+    if login_button:
+        if input_user == username and input_password == password:
+            st.session_state.authenticated = True
+            st.success("Acceso concedido")
+        else:
+            st.error("Usuario o contraseña incorrectos")
 else:
     video_url = st.text_input("Ingresa la URL de YouTube para descargar el video")
     uploaded_file = st.file_uploader("Carga el archivo multimedia", type=["mp3", "mp4", "wav", "m4a", "ogg", "avi", "mov"])
