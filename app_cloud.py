@@ -1,25 +1,24 @@
 # BLAHCUTTER ESCRITORIO V2.0
 import os
 import json
-#import shutil
+import shutil
 from streamlit import session_state
 
 # Definir la carpeta temporal y Limpiar la carpeta temporal antes de iniciar la app
 temp_folder = "temp_dir"
-# if os.path.exists(temp_folder):
-#     for filename in os.listdir(temp_folder):
-#         file_path = os.path.join(temp_folder, filename)
-#         try:
-#             if os.path.isfile(file_path) or os.path.islink(file_path):
-#                 os.unlink(file_path)
-#             elif os.path.isdir(file_path):
-#                 shutil.rmtree(file_path)
-#         except Exception as e:
-#             print(f"Error al eliminar {file_path}: {e}")
-# else:
-#     os.makedirs(temp_folder)
 if not os.path.exists(temp_folder):
     os.makedirs(temp_folder)
+if not "reproductor" in session_state:
+    for filename in os.listdir(temp_folder):
+        file_path = os.path.join(temp_folder, filename)
+        try:
+            if os.path.isfile(file_path) or os.path.islink(file_path):
+                os.unlink(file_path)
+            elif os.path.isdir(file_path):
+                shutil.rmtree(file_path)
+        except Exception as e:
+            print(f"Error al eliminar {file_path}: {e}")
+
 
 # Función para transcribir el archivo con timestamps formateados
 def transcribe_and_format(file_path):
@@ -137,7 +136,7 @@ def force_delete(file_path):
 def video_downloader(url):
     import yt_dlp as dl
     ydl_opts = {
-        'format': 'bv[ext=mp4][vcodec=avc1]+ba[ext=m4a]/b[ext=mp4]',
+        'format': 'bv[ext=mp4][vcodec=avc1][filesize<180M]+ba[ext=m4a]/b[ext=mp4][filesize<200M]',
         'outtmpl': os.path.join(temp_folder, 'archivo_trabajado.mp4'),
         'force_overwrites': True
     }
@@ -148,7 +147,8 @@ def video_downloader(url):
 
 # Interfaz de Streamlit
 import streamlit as st
-st.title("Transcriptor de Audio y Video")
+st.title("BlahCutter app")
+st.write("Transcriptor de audio y video")
 video_url = st.text_input("Ingresa la URL de YouTube para descargar el video")
 uploaded_file = st.file_uploader("Carga el archivo multimedia", type=["mp3", "mp4", "wav", "m4a", "ogg", "avi", "mov"])
 if video_url:
@@ -168,6 +168,7 @@ if video_url:
             transcription = st.session_state['transcription']
             transcription_data = st.session_state['transcription_data']
     st.video(temp_file_path)
+    st.session_state['reproductor'] = "reproductor"
 
 elif uploaded_file:
     temp_file_path = os.path.join("temp_dir", uploaded_file.name)
@@ -183,6 +184,7 @@ elif uploaded_file:
         st.session_state['is_video'] = temp_file_path
     else:
         st.audio(temp_file_path)
+        st.session_state['reproductor'] = "reproductor"
     if "transcription" not in st.session_state:
         st.write("Procesando transcripción...")
         transcription, transcription_data = transcribe_and_format(temp_file_path)
