@@ -171,6 +171,7 @@ if not st.session_state.authenticated:
         if input_user == username and input_password == password:
             st.session_state.authenticated = True
             st.success("Acceso concedido")
+            st.experimental_rerun()
         else:
             st.error("Usuario o contraseña incorrectos")
 else:
