@@ -42,7 +42,7 @@ def transcribe_and_format(file_path):
 
     # Función de limpieza de palabras
     def clean_text(text):
-        words_to_remove = ["Zweitausendein", "Ÿousand", "ÿ", "ousand"]
+        words_to_remove = ["Zweitausendein", "Ÿousand", "ÿ", "ousand", "zweitausendeinousand", "Ÿ"]
         for word in words_to_remove:
             text = text.replace(word, "")
         return text
