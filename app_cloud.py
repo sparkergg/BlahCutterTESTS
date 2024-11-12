@@ -109,7 +109,7 @@ def cut_audio(file_path, start_time, end_time):
         end_time_ms = (end_minutes * 60 + end_seconds) * 1000
     else:
         end_time_ms = end_time * 1000
-
+    end_time_ms += 750
     cut_audio = audio[start_time_ms:end_time_ms]
     return cut_audio
 
@@ -117,8 +117,24 @@ def cut_audio(file_path, start_time, end_time):
 # Función para cortar el video
 def cut_video(file_path, start_time, end_time):
     from moviepy.editor import VideoFileClip
+
+    # Convertir tiempos a segundos si están en formato "MM:SS"
+    def convert_to_seconds(time_str):
+        if isinstance(time_str, str):
+            minutes, seconds = map(int, time_str.split(":"))
+            return minutes * 60 + seconds
+        return time_str  # Si ya es numérico, devuélvelo tal cual
+
+    # Convertir tiempos de inicio y fin
+    start_time = convert_to_seconds(start_time)
+    end_time = convert_to_seconds(end_time)
+
+    # Ajustar tiempo final para evitar cortes prematuros
+    adjusted_end_time = end_time + 0.75  # Ajuste de 0.5 segundos
+
+    # Crear el clip del video
     video = VideoFileClip(file_path)
-    video_clip = video.subclip(start_time, end_time)
+    video_clip = video.subclip(start_time, adjusted_end_time)
     return video_clip
 
 
@@ -144,13 +160,6 @@ def video_downloader(url):
 
     with dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([url])
-
-# def login():
-#     if (st.session_state["input_user"] == username and
-#             st.session_state["input_password"] == password):
-#         st.session_state.authenticated = True
-#     else:
-#         st.error("Usuario o contraseña incorrectos")
 
 
 # Interfaz de Streamlit
@@ -178,6 +187,7 @@ else:
     video_url = st.text_input("Ingresa la URL de YouTube para descargar el video")
     uploaded_file = st.file_uploader("Carga el archivo multimedia", type=["mp3", "mp4", "wav", "m4a", "ogg", "avi", "mov"])
     if video_url:
+        st.write("Descargando el video elegido...")
         temp_file_path = os.path.join(temp_folder, "archivo_trabajado.mp4")
         if "temp_file_path" not in st.session_state:
             video_downloader(video_url)
