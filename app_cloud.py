@@ -25,7 +25,8 @@ if not "reproductor" in session_state:
 def transcribe_and_format(file_path):
     import assemblyai as aai
     aai.settings.api_key = "1d6e457eab9b41e28eb850b2d3692064"
-    config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best, language_code="es", speaker_labels=True)
+    config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best, #language_code="es", 
+                                     speaker_labels=True)
     transcriber = aai.Transcriber(config=config)
     if not file_path:
         return "No se cargó ningún archivo."
