@@ -24,7 +24,7 @@ if not "reproductor" in session_state:
 # Función para transcribir el archivo con timestamps formateados
 def transcribe_and_format(file_path):
     import assemblyai as aai
-    aai.settings.api_key = "1d6e457eab9b41e28eb850b2d3692064"
+    aai.settings.api_key = "f8f649f93a254bb79c44befd87b1fe61"
     config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best, #language_code="es", 
                                      language_detection=True, speaker_labels=True)
     transcriber = aai.Transcriber(config=config)
