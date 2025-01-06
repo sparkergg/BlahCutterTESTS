@@ -154,7 +154,7 @@ def force_delete(file_path):
 def video_downloader(url):
     import yt_dlp as dl
     ydl_opts = {
-        'format': 'bv[ext=mp4][vcodec=avc1][filesize<180M]+ba[ext=m4a]/b[ext=mp4][filesize<200M]',
+        'format': 'bv[ext=mp4][protocol=https][filesize<180M]+ba[ext=m4a]/b[ext=mp4][filesize<200M]',
         'outtmpl': os.path.join(temp_folder, 'archivo_trabajado.mp4'),
         'force_overwrites': True
     }
