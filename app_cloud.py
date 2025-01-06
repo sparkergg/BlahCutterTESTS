@@ -25,8 +25,7 @@ if not "reproductor" in session_state:
 def transcribe_and_format(file_path):
     import assemblyai as aai
     aai.settings.api_key = "f8f649f93a254bb79c44befd87b1fe61"
-    config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best, #language_code="es", 
-                                     language_detection=True, speaker_labels=True)
+    config = aai.TranscriptionConfig(speech_model=aai.SpeechModel.best, language_code="es", speaker_labels=True)
     transcriber = aai.Transcriber(config=config)
     if not file_path:
         return "No se cargó ningún archivo."
@@ -154,7 +153,7 @@ def force_delete(file_path):
 def video_downloader(url):
     import yt_dlp as dl
     ydl_opts = {
-        'format': 'bv[ext=mp4][filesize<180M]+ba[ext=m4a]/b[ext=mp4][filesize<200M]',
+        'format': 'bv[ext=mp4][protocol=https]+ba[ext=m4a]',
         'outtmpl': os.path.join(temp_folder, 'archivo_trabajado.mp4'),
         'force_overwrites': True
     }
